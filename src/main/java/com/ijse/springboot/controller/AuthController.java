@@ -1,13 +1,11 @@
 package com.ijse.springboot.controller;
 
-import com.ijse.springboot.dto.*;
-import com.ijse.springboot.entity.User;
-import com.ijse.springboot.repository.UserRepository;
-import com.ijse.springboot.security.JwtUtil;
+import com.ijse.springboot.dto.AuthRequest;
+import com.ijse.springboot.dto.JwtResponse;
+import com.ijse.springboot.dto.RegisterRequest;
+import com.ijse.springboot.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,37 +13,16 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     @Autowired
-    private AuthenticationManager authManager;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @PostMapping("/signup")
-    public String register(@RequestBody RegisterRequest request) {
-        User user = User.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
-                .build();
-        userRepository.save(user);
-        return "User registered successfully";
-    }
+    private AuthService authService;
 
     @PostMapping("/signin")
-    public AuthResponse login(@RequestBody AuthRequest request) {
-        authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+    public ResponseEntity<JwtResponse> signin(@RequestBody AuthRequest authRequest) {
+        return ResponseEntity.ok(authService.authenticateUser(authRequest));
+    }
 
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-                request.getUsername(), request.getPassword(), java.util.Collections.emptyList());
-
-        String token = jwtUtil.generateToken(userDetails.getUsername());
-        return new AuthResponse(token);
+    @PostMapping("/signup")
+    public ResponseEntity<String> signup(@RequestBody RegisterRequest request) {
+        authService.registerUser(request);
+        return ResponseEntity.ok("User registered successfully");
     }
 }

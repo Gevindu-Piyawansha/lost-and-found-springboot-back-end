@@ -2,6 +2,10 @@ package com.ijse.springboot.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.ijse.springboot.entity.User;
+import com.ijse.springboot.entity.Item;
+
+
 
 @Entity
 @Getter
