@@ -40,7 +40,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll() // ✅ Allow public access to signin/signup
+                        .requestMatchers("/auth/**", "/api/dashboard/stats").permitAll()
+                        // ✅ Allow public access to signin/signup
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -49,7 +50,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-    
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
