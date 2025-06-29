@@ -138,7 +138,7 @@ public class RequestController {
             // Update item status to CLAIMED if request is approved
             if (existing.getItem() != null) {
                 Item item = existing.getItem();
-                item.setStatus(Item.Status.CLAIMED);
+                item.setStatus(Item.Status.RETURNED);
                 itemRepository.save(item);
             }
 

@@ -44,7 +44,7 @@ public class ItemController {
 
     @GetMapping("/claimed")
     public ResponseEntity<List<Item>> getClaimedItems() {
-        List<Item> claimedItems = itemRepository.findByStatus(Item.Status.CLAIMED);
+        List<Item> claimedItems = itemRepository.findByStatus(Item.Status.RETURNED);
         return ResponseEntity.ok(claimedItems);
     }
 
